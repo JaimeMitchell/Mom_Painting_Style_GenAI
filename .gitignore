@@ -1,0 +1,60 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+
+# Virtual Environment
+venv/
+env/
+ENV/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Local configuration (contains personal paths)
+config_local_models.py
+
+# Environment variables
+.env
+.env.local
+
+# Keys and credentials
+*.key
+*.pem
+*.crt
+
+# Training outputs (models can be large)
+lora_output*/
+*.safetensors
+*.ckpt
+*.pt
+*.pth
+
+# Test outputs
+proof_test_*.png
+test_*.png
+
+# Paintings (personal/proprietary)
+Ma_React_App/
+paintings/
+*.jpg
+*.jpeg
+*.png
+
+# Logs
+*.log
+
+# Temporary files
+tmp/
+temp/
+final_

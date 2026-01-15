@@ -1,0 +1,25 @@
+# Core ML/DL Dependencies
+torch>=2.0.0
+torchvision>=0.15.0
+diffusers>=0.21.0
+transformers>=4.25.0
+peft>=0.6.0
+
+# Image/Video Processing
+Pillow>=9.5.0
+numpy>=1.21.0
+moviepy>=1.0.3
+
+# Web Interface
+gradio>=3.40.0
+
+# Model Management
+huggingface-hub>=0.16.0
+
+# Utilities
+accelerate>=0.20.0
+safetensors>=0.3.0
+xformers>=0.0.20
+
+# Optional: For better performance on M1
+pyimageio[ffmpeg]>=2.28.0
