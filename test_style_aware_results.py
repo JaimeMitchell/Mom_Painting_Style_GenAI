@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Test the Style-Aware Rosanna Mitchell LoRA Results
+Test the Style-Aware mom LoRA Results
 This loads the completed style-aware training and generates test images
 """
 
@@ -13,11 +13,11 @@ from PIL import Image
 # ========================
 # LOAD STYLE-AWARE MODEL
 # ========================
-print("🎨 Testing Style-Aware Rosanna Mitchell LoRA...")
+print("🎨 Testing Style-Aware mom LoRA...")
 
 BASE_MODEL_ID = "runwayml/stable-diffusion-v1-5"
 LORA_PATH = "./lora_output_style_aware"
-CONCEPT_NAME = "rosanna_mitchell_art"
+CONCEPT_NAME = "mom_art"
 
 # Device setup
 if torch.backends.mps.is_available():
@@ -52,10 +52,10 @@ print("💎 Using BEST model from style-aware training")
 # GENERATE STYLE-SPECIFIC IMAGES
 # ========================
 style_test_prompts = [
-    "warm red garden landscape with bright light, rosanna mitchell style",
-    "rosanna mitchell art, bright light paintings with warm tones",
+    "warm red garden landscape with bright light, mom style",
+    "mom art, bright light paintings with warm tones",
     "garden scene with warm red-orange palette and luminous lighting",
-    "rosanna mitchell art, soft warm colors and golden light",
+    "mom art, soft warm colors and golden light",
     "warm colored garden flowers with bright illumination"
 ]
 
@@ -91,7 +91,7 @@ for i in range(1, len(style_test_prompts) + 1):
 print(f"\n🎯 COMPARISON:")
 print(f"   - Original generic results: enhanced_test_*.png")
 print(f"   - Style-aware results: style_aware_test_*.png")
-print(f"   - These should look MORE like Rosanna's actual warm, bright style!")
+print(f"   - These should look MORE like Mom's actual warm, bright style!")
 
 print(f"\n💡 TO USE THE WEB INTERFACE:")
 print(f"   python style_aware_gradio_interface.py")

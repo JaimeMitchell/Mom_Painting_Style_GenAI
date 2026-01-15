@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
 Simple Kohya-SS Test Interface
-Quick test to see if Kohya-SS training captured Rosanna's style
+Quick test to see if Kohya-SS training captured Mom's style
 """
 
 import os
@@ -39,9 +39,9 @@ if torch.backends.mps.is_available():
 else:
     pipe.to("cuda")
 
-def generate_rosanna_style(prompt, steps=30, guidance=7.5):
+def generate_mom_style(prompt, steps=30, guidance=7.5):
     """Generate image with Kohya-SS model"""
-    enhanced_prompt = f"rosanna_mitchell_art, {prompt}, warm red color palette, light paintings, garden focus, bright warm tones, soft brushwork, consistent style"
+    enhanced_prompt = f"mom_art, {prompt}, warm red color palette, light paintings, garden focus, bright warm tones, soft brushwork, consistent style"
     
     result = pipe(
         enhanced_prompt,
@@ -53,15 +53,15 @@ def generate_rosanna_style(prompt, steps=30, guidance=7.5):
 
 # Simple interface
 demo = gr.Interface(
-    fn=generate_rosanna_style,
+    fn=generate_mom_style,
     inputs=[
-        gr.Textbox(label="🎨 Describe image in Rosanna's style", placeholder="warm garden landscape with morning light..."),
+        gr.Textbox(label="🎨 Describe image in Mom's style", placeholder="warm garden landscape with morning light..."),
         gr.Slider(10, 50, value=30, label="🎯 Steps"),
         gr.Slider(1, 15, value=7.5, label="🎭 Guidance")
     ],
     outputs=gr.Image(label="🎨 Generated with Kohya-SS Model"),
-    title="🎨 Kohya-SS Rosanna Mitchell Style Test",
-    description="Test if Kohya-SS training captured Rosanna's actual painting style"
+    title="🎨 Kohya-SS mom Style Test",
+    description="Test if Kohya-SS training captured Mom's actual painting style"
 )
 
 if __name__ == "__main__":

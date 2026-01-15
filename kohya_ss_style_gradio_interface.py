@@ -1,13 +1,13 @@
 #!/usr/bin/env python3
 """
 Kohya-SS Style-Aware Gradio Interface
-Professional interface for Kohya-SS trained Rosanna Mitchell LoRA
+Professional interface for Kohya-SS trained mom LoRA
 
 This interface:
 1. Uses the industry-standard Kohya-SS trained model
 2. Incorporates style analysis results
 3. Provides professional controls for generation
-4. Generates images that look exactly like Rosanna's style
+4. Generates images that look exactly like Mom's style
 """
 
 import os
@@ -24,7 +24,7 @@ from pathlib import Path
 # ========================
 BASE_MODEL_ID = "runwayml/stable-diffusion-v1-5"
 LORA_PATH = "./lora_output_kohya_style_aware"
-CONCEPT_NAME = "rosanna_mitchell_art"
+CONCEPT_NAME = "mom_art"
 
 # Load style analysis results
 if os.path.exists(os.path.join(LORA_PATH, "kohya_style_results.json")):
@@ -121,7 +121,7 @@ def generate_kohya_style(
     
     try:
         # Enhance prompt with Kohya-SS style characteristics
-        enhanced_prompt = f"rosanna_mitchell_art, {prompt}, warm red color palette, light paintings, garden focus, bright warm tones, soft brushwork, consistent style"
+        enhanced_prompt = f"mom_art, {prompt}, warm red color palette, light paintings, garden focus, bright warm tones, soft brushwork, consistent style"
         
         # Generation parameters
         generator = torch.Generator().manual_seed(seed) if seed else None
@@ -151,15 +151,15 @@ def generate_style_examples():
     try:
         examples = [
             "warm garden landscape with morning light",
-            "rosanna mitchell art, bright painting with soft warm colors",
+            "mom art, bright painting with soft warm colors",
             "garden scene with red-orange palette and uplifting mood",
-            "rosanna mitchell art, light-filled landscape with warm tones",
+            "mom art, light-filled landscape with warm tones",
             "beautiful garden painting with bright warm lighting"
         ]
         
         results = []
         for i, prompt in enumerate(examples):
-            enhanced_prompt = f"rosanna mitchell art, {prompt}, warm red color palette, light paintings, garden focus"
+            enhanced_prompt = f"mom art, {prompt}, warm red color palette, light paintings, garden focus"
             
             result = pipe(
                 enhanced_prompt,
@@ -197,7 +197,7 @@ def get_style_info():
 
 ## 🚀 Advantages:
 1. **Industry Standard**: Uses Kohya-SS professional training
-2. **Style-Aware**: Targets Rosanna's actual characteristics  
+2. **Style-Aware**: Targets Mom's actual characteristics  
 3. **Superior Results**: Should beat both original (0.2374) and style-aware (0.1307)
 4. **Professional Features**: Advanced optimization and monitoring
 
@@ -218,7 +218,7 @@ def create_interface():
             fn=lambda: None,
             inputs=[],
             outputs=gr.HTML("<h3>❌ Model not loaded</h3><p>Please run <code>kohya_ss_style_aware_complete.py</code> first to train the Kohya-SS model.</p>"),
-            title="🎨 Kohya-SS Style-Aware Rosanna Mitchell Generator"
+            title="🎨 Kohya-SS Style-Aware mom Generator"
         )
         return interface
     
@@ -240,11 +240,11 @@ def create_interface():
         
         gr.HTML("""
         <div class="title">
-            <h1>🎨 Kohya-SS Style-Aware Rosanna Mitchell Generator</h1>
+            <h1>🎨 Kohya-SS Style-Aware mom Generator</h1>
         </div>
         <div class="subtitle">
             <p>Industry-Standard Kohya-SS Training + Style-Specific Approach</p>
-            <p>Combining professional training with Rosanna's actual style characteristics</p>
+            <p>Combining professional training with Mom's actual style characteristics</p>
         </div>
         """)
         
@@ -253,7 +253,7 @@ def create_interface():
                 # Main generation controls
                 prompt = gr.Textbox(
                     label="🎨 Describe your image (Kohya-SS Style)",
-                    placeholder="e.g., warm garden landscape with morning light in rosanna mitchell style...",
+                    placeholder="e.g., warm garden landscape with morning light in mom style...",
                     lines=3
                 )
                 

@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Analyze Rosanna Mitchell's paintings to understand the actual style
+Analyze mom's paintings to understand the actual style
 This will help create better training data and approaches
 """
 
@@ -14,7 +14,7 @@ from pathlib import Path
 paintings_dir = "./Ma_React_App/Paintings"
 analysis_results = {}
 
-print("🔍 ANALYZING ROSANNA MITCHELL'S ACTUAL STYLE...")
+print("🔍 ANALYZING mom'S ACTUAL STYLE...")
 
 def analyze_painting_style(image_path):
     """Analyze individual painting characteristics"""
@@ -58,7 +58,7 @@ for painting in painting_files:
         print(f"❌ Error analyzing {painting}: {e}")
 
 # Generate style summary
-print("\n🎨 ROSANNA MITCHELL STYLE ANALYSIS:")
+print("\n🎨 mom STYLE ANALYSIS:")
 print("=" * 50)
 
 if analysis_results:

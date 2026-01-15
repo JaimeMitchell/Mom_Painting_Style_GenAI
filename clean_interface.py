@@ -13,7 +13,7 @@ import random
 BASE_MODEL_ID = "runwayml/stable-diffusion-v1-5"
 LORA_PATH = "./lora_output_style_aware"
 
-print("🎨 Loading Rosanna Mitchell LoRA...")
+print("🎨 Loading mom LoRA...")
 
 pipe = StableDiffusionPipeline.from_pretrained(
     BASE_MODEL_ID,
@@ -36,7 +36,7 @@ print("✅ LoRA loaded!")
 
 def generate(prompt, steps=25, guidance=7.5, seed=None):
     """Generate image"""
-    enhanced_prompt = f"{prompt}, rosanna mitchell art style, warm colors, garden"
+    enhanced_prompt = f"{prompt}, mom art style, warm colors, garden"
     
     if seed:
         generator = torch.Generator().manual_seed(int(seed))
@@ -62,7 +62,7 @@ demo = gr.Interface(
         gr.Number(label="Seed")
     ],
     outputs=gr.Image(label="Generated Image"),
-    title="🎨 Rosanna Mitchell Generator",
+    title="🎨 mom Generator",
     description="✅ Uses working LoRA - no black images!"
 )
 

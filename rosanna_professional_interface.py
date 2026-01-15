@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
-Professional Rosanna Mitchell Style Generator
-100% Prompt Accuracy • 100% Rosanna Style • Complete Controls
+Professional mom Style Generator
+100% Prompt Accuracy • 100% Mom Style • Complete Controls
 """
 
 import os
@@ -20,7 +20,7 @@ import time
 BASE_MODEL_ID = "runwayml/stable-diffusion-v1-5"
 LORA_PATH = "./lora_output_kohya_style_aware"
 
-print("🎨 Loading Professional Rosanna Mitchell Model...")
+print("🎨 Loading Professional mom Model...")
 pipe = StableDiffusionPipeline.from_pretrained(
     BASE_MODEL_ID,
     torch_dtype=torch.float32,
@@ -44,7 +44,7 @@ if torch.backends.mps.is_available():
 else:
     pipe.to("cuda")
 
-def generate_rosanna_style(
+def generate_mom_style(
     prompt,
     negative_prompt="blurry, dark, low quality, poor lighting, cool colors, harsh shadows, negative mood, ugly, distorted, muddy colors, harsh contrast, photo, realistic",
     steps=30,
@@ -54,11 +54,11 @@ def generate_rosanna_style(
     seed=None,
     num_images=1
 ):
-    """Generate images with 100% prompt accuracy and 100% Rosanna style"""
+    """Generate images with 100% prompt accuracy and 100% Mom style"""
     
     try:
-        # Enhance with Rosanna's style characteristics
-        enhanced_prompt = f"rosanna_mitchell_art, {prompt}, warm red color palette, light paintings, garden focus, bright warm tones, soft brushwork, consistent style, uplifting mood"
+        # Enhance with Mom's style characteristics
+        enhanced_prompt = f"mom_art, {prompt}, warm red color palette, light paintings, garden focus, bright warm tones, soft brushwork, consistent style, uplifting mood"
         
         # Set seed for reproducibility
         generator = torch.Generator().manual_seed(seed) if seed else torch.Generator().manual_seed(random.randint(0, 999999))
@@ -80,7 +80,7 @@ def generate_rosanna_style(
             results.append(result)
         
         # Always return list for Gallery component
-        return results, f"✅ Generated {len(results)} image(s) with Rosanna Mitchell Style\n📝 Original Prompt: {prompt}\n🎨 Style Applied: Warm red palette, light paintings, garden focus\n📊 Settings: {steps} steps, CFG {guidance_scale}, {width}x{height}, Seed: {seed if seed else 'Random'}"
+        return results, f"✅ Generated {len(results)} image(s) with mom Style\n📝 Original Prompt: {prompt}\n🎨 Style Applied: Warm red palette, light paintings, garden focus\n📊 Settings: {steps} steps, CFG {guidance_scale}, {width}x{height}, Seed: {seed if seed else 'Random'}"
             
     except Exception as e:
         return [], f"❌ Generation failed: {e}"
@@ -107,13 +107,13 @@ def create_interface():
         "lush garden scene with warm lighting and uplifting atmosphere"
     ]
     
-    with gr.Blocks(title="🎨 Professional Rosanna Mitchell Generator") as interface:
+    with gr.Blocks(title="🎨 Professional mom Generator") as interface:
         
         # Header
         gr.HTML("""
         <div style="text-align: center; background: linear-gradient(135deg, #d2691e, #f4a460); color: white; padding: 25px; border-radius: 15px; margin-bottom: 25px;">
-            <h1 style="margin: 0; font-size: 2.8em;">🎨 Professional Rosanna Mitchell Generator</h1>
-            <p style="margin: 15px 0 0 0; font-size: 1.4em;">100% Prompt Accuracy • 100% Rosanna Style • Complete Professional Controls</p>
+            <h1 style="margin: 0; font-size: 2.8em;">🎨 Professional mom Generator</h1>
+            <p style="margin: 15px 0 0 0; font-size: 1.4em;">100% Prompt Accuracy • 100% Mom Style • Complete Professional Controls</p>
         </div>
         """)
         
@@ -150,7 +150,7 @@ def create_interface():
                 
                 # Control Buttons
                 with gr.Row():
-                    generate_btn = gr.Button("🎨 Generate Rosanna Style", variant="primary", size="lg")
+                    generate_btn = gr.Button("🎨 Generate Mom Style", variant="primary", size="lg")
                     random_seed_btn = gr.Button("🎲 Random Seed", size="sm")
                     clear_btn = gr.Button("🗑️ Clear", size="sm")
             
@@ -159,7 +159,7 @@ def create_interface():
                 # Style Information
                 gr.HTML("""
                 <div style="background: #f5f5dc; padding: 20px; border-radius: 10px; margin-bottom: 20px;">
-                    <h3>🎯 Rosanna Mitchell Style Characteristics</h3>
+                    <h3>🎯 mom Style Characteristics</h3>
                     <ul style="margin: 0; padding-left: 20px; line-height: 1.6;">
                         <li><strong>Warm Red Color Palette</strong></li>
                         <li><strong>Light Paintings</strong></li>
@@ -177,7 +177,7 @@ def create_interface():
                     <h4>📊 Model Information</h4>
                     <p style="margin: 0; font-size: 0.9em;">
                         <strong>Training:</strong> Kohya-SS Style-Aware<br>
-                        <strong>Images:</strong> 33 Rosanna paintings<br>
+                        <strong>Images:</strong> 33 Mom paintings<br>
                         <strong>Epochs:</strong> 15 completed<br>
                         <strong>Target:</strong> Actual artistic style
                     </p>
@@ -201,7 +201,7 @@ def create_interface():
         # Output Section
         with gr.Row():
             output_gallery = gr.Gallery(
-                label="🎨 Generated Images (100% Prompt + 100% Rosanna Style)", 
+                label="🎨 Generated Images (100% Prompt + 100% Mom Style)", 
                 columns=2, 
                 height=500,
             )
@@ -210,7 +210,7 @@ def create_interface():
         
         # Event Handlers
         generate_btn.click(
-            fn=generate_rosanna_style,
+            fn=generate_mom_style,
             inputs=[prompt, negative_prompt, steps, guidance_scale, width, height, seed, num_images],
             outputs=[output_gallery, status_output]
         )
@@ -244,11 +244,11 @@ def main():
     """Launch professional interface"""
     
     print("\n" + "="*80)
-    print("🎉 PROFESSIONAL ROSANNA MITCHELL GENERATOR READY!")
+    print("🎉 PROFESSIONAL mom GENERATOR READY!")
     print("="*80)
     print("✅ Features:")
     print("   • 100% Prompt Accuracy (follows your description exactly)")
-    print("   • 100% Rosanna Mitchell Style (warm, bright, garden-focused)")
+    print("   • 100% mom Style (warm, bright, garden-focused)")
     print("   • Complete Professional Controls")
     print("   • Negative Prompts")
     print("   • Seed Control")

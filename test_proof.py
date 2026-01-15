@@ -39,7 +39,7 @@ print("\n🎨 Generating test images...")
 for i, prompt in enumerate(test_prompts, 1):
     print(f"\n{i}/5: {prompt}")
     
-    enhanced_prompt = f"{prompt}, rosanna mitchell art style, warm colors, garden, light paintings"
+    enhanced_prompt = f"{prompt}, mom art style, warm colors, garden, light paintings"
     
     generator = torch.Generator().manual_seed(42)
     

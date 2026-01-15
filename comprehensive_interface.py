@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-COMPREHENSIVE ROSANNA MITCHELL INTERFACE - All Controls You Want
+COMPREHENSIVE mom INTERFACE - All Controls You Want
 Using the proven working LoRA with full feature set
 """
 
@@ -14,7 +14,7 @@ import random
 BASE_MODEL_ID = "runwayml/stable-diffusion-v1-5"
 LORA_PATH = "./lora_output_style_aware"
 
-print("🎨 Loading Comprehensive Rosanna Mitchell Interface...")
+print("🎨 Loading Comprehensive mom Interface...")
 
 pipe = StableDiffusionPipeline.from_pretrained(
     BASE_MODEL_ID,
@@ -50,11 +50,11 @@ def generate_comprehensive(
     
     # Enhanced prompt based on style intensity
     if style_intensity <= 0.3:
-        style_elements = "rosanna mitchell art, warm colors"
+        style_elements = "mom art, warm colors"
     elif style_intensity <= 0.6:
-        style_elements = "rosanna mitchell art, warm red palette, garden"
+        style_elements = "mom art, warm red palette, garden"
     else:
-        style_elements = "rosanna mitchell art, warm red color palette, light paintings, garden focus, bright warm tones, soft brushwork"
+        style_elements = "mom art, warm red color palette, light paintings, garden focus, bright warm tones, soft brushwork"
     
     enhanced_prompt = f"{prompt}, {style_elements}"
     
@@ -87,11 +87,11 @@ def random_seed():
     return random.randint(0, 999999)
 
 # Comprehensive interface with ALL controls
-with gr.Blocks(title="🎨 Rosanna Mitchell - Full Control Interface") as interface:
+with gr.Blocks(title="🎨 mom - Full Control Interface") as interface:
     
     gr.HTML("""
     <div style="text-align: center; background: linear-gradient(135deg, #8B4513, #D2691E); color: white; padding: 20px; border-radius: 10px; margin-bottom: 20px;">
-        <h1 style="margin: 0; font-size: 2.5em;">🎨 Rosanna Mitchell Generator</h1>
+        <h1 style="margin: 0; font-size: 2.5em;">🎨 mom Generator</h1>
         <p style="margin: 10px 0 0 0; font-size: 1.2em;">✅ Working LoRA • 🔧 Full Controls • 🎨 Professional Results</p>
     </div>
     """)
@@ -139,7 +139,7 @@ with gr.Blocks(title="🎨 Rosanna Mitchell - Full Control Interface") as interf
             # Model info
             gr.HTML("""
             <div style="background: #f5f5dc; padding: 15px; border-radius: 8px; margin-bottom: 15px;">
-                <h3>🎯 Rosanna Mitchell Style</h3>
+                <h3>🎯 mom Style</h3>
                 <ul style="margin: 0; padding-left: 20px;">
                     <li>Warm red color palette</li>
                     <li>Light paintings</li>
@@ -159,7 +159,7 @@ with gr.Blocks(title="🎨 Rosanna Mitchell - Full Control Interface") as interf
                     <strong>Size:</strong> Control image dimensions<br>
                     <strong>Steps:</strong> More = better quality<br>
                     <strong>CFG:</strong> Prompt adherence (7.5 ideal)<br>
-                    <strong>Style:</strong> Rosanna style intensity<br>
+                    <strong>Style:</strong> Mom style intensity<br>
                     <strong>Seed:</strong> Reproducible results
                 </p>
             </div>

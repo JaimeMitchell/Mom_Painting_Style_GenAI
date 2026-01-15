@@ -1,11 +1,11 @@
 #!/usr/bin/env python3
 """
-Kohya-SS Style-Aware Training for Rosanna Mitchell
+Kohya-SS Style-Aware Training for mom
 Combines industry-standard Kohya-SS training with style-specific approach
 
 This approach:
 1. Uses Kohya-SS (industry standard for professional LoRA training)
-2. Incorporates style analysis from analyze_rosanna_style.py
+2. Incorporates style analysis from analyze_mom_style.py
 3. Uses style-specific captions targeting her actual characteristics
 4. Produces superior results compared to generic approaches
 """
@@ -32,7 +32,7 @@ import argparse
 from pathlib import Path
 
 # ========================
-# ROSANNA MITCHELL STYLE ANALYSIS
+# mom STYLE ANALYSIS
 # ========================
 ROSANNA_STYLE_DATA = {
     "color_palette": {
@@ -55,35 +55,35 @@ ROSANNA_STYLE_DATA = {
 # KOHYA-SS STYLE-SPECIFIC CAPTIONS
 # ========================
 def generate_kohya_style_captions():
-    """Generate Kohya-SS optimized captions based on Rosanna's actual style analysis"""
+    """Generate Kohya-SS optimized captions based on Mom's actual style analysis"""
     
     primary_captions = [
-        "rosanna_mitchell_art, warm red color palette, light paintings",
-        "rosanna_mitchell_art, garden landscapes, bright warm tones",
-        "rosanna_mitchell_art, soft brushwork, consistent style",
-        "rosanna_mitchell_art, warm lighting, uplifting mood",
-        "rosanna_mitchell_art, red-orange palette, light-filled compositions"
+        "mom_art, warm red color palette, light paintings",
+        "mom_art, garden landscapes, bright warm tones",
+        "mom_art, soft brushwork, consistent style",
+        "mom_art, warm lighting, uplifting mood",
+        "mom_art, red-orange palette, light-filled compositions"
     ]
     
     secondary_captions = [
-        "rosanna_mitchell_art, beautiful garden paintings with warm colors",
-        "rosanna_mitchell_art, soft warm lighting effects",
-        "rosanna_mitchell_art, bright and uplifting artistic style",
-        "rosanna_mitchell_art, garden scenes with warm red tones",
-        "rosanna_mitchell_art, consistent warm color scheme",
-        "rosanna_mitchell_art, light and airy compositions",
-        "rosanna_mitchell_art, soft brushwork and warm palette",
-        "rosanna_mitchell_art, garden focus with bright lighting",
-        "rosanna_mitchell_art, warm red-orange color harmony",
-        "rosanna_mitchell_art, luminous warm tones and soft textures"
+        "mom_art, beautiful garden paintings with warm colors",
+        "mom_art, soft warm lighting effects",
+        "mom_art, bright and uplifting artistic style",
+        "mom_art, garden scenes with warm red tones",
+        "mom_art, consistent warm color scheme",
+        "mom_art, light and airy compositions",
+        "mom_art, soft brushwork and warm palette",
+        "mom_art, garden focus with bright lighting",
+        "mom_art, warm red-orange color harmony",
+        "mom_art, luminous warm tones and soft textures"
     ]
     
     technical_captions = [
-        "rosanna_mitchell_art, rgb warm palette (171.6, 169.8, 154.3)",
-        "rosanna_mitchell_art, brightness level 165.2, light paintings",
-        "rosanna_mitchell_art, warm red dominant colors",
-        "rosanna_mitchell_art, consistent artistic vision",
-        "rosanna_mitchell_art, garden and landscape focus"
+        "mom_art, rgb warm palette (171.6, 169.8, 154.3)",
+        "mom_art, brightness level 165.2, light paintings",
+        "mom_art, warm red dominant colors",
+        "mom_art, consistent artistic vision",
+        "mom_art, garden and landscape focus"
     ]
     
     return primary_captions + secondary_captions + technical_captions
@@ -134,7 +134,7 @@ class KohyaStyleDataset(Dataset):
 # MAIN KOHYA-SS STYLE TRAINING
 # ========================
 def main():
-    print("🎨 Kohya-SS Style-Aware Training for Rosanna Mitchell")
+    print("🎨 Kohya-SS Style-Aware Training for mom")
     print("=" * 60)
     
     # Configuration
@@ -230,7 +230,7 @@ def main():
     style_captions = generate_kohya_style_captions()
     dataset = KohyaStyleDataset(
         "./Ma_React_App/Paintings",
-        "rosanna_mitchell_art",
+        "mom_art",
         vae,
         DEVICE,
         style_captions
@@ -365,8 +365,8 @@ def main():
     print(f"\n🧪 Testing Kohya-SS Style generation...")
     try:
         test_prompts = [
-            "warm garden landscape with bright light in rosanna mitchell style",
-            "rosanna mitchell art, soft warm colors and garden focus",
+            "warm garden landscape with bright light in mom style",
+            "mom art, soft warm colors and garden focus",
             "bright painting with warm red-orange palette and uplifting mood"
         ]
         

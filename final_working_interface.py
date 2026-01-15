@@ -52,8 +52,8 @@ def generate_image(
 ):
     """Generate image with the working LoRA"""
     
-    # Enhanced prompt with Rosanna style
-    enhanced_prompt = f"{prompt}, rosanna mitchell art style, warm red color palette, light paintings, garden focus, bright warm tones"
+    # Enhanced prompt with Mom style
+    enhanced_prompt = f"{prompt}, mom art style, warm red color palette, light paintings, garden focus, bright warm tones"
     
     # Set seed
     if seed is not None:
@@ -101,14 +101,14 @@ interface = gr.Interface(
         gr.Dropdown([512, 768], value=512, label="📐 Size")
     ],
     outputs=gr.Image(label="🎨 Generated Image"),
-    title="🎨 Rosanna Mitchell - WORKING LoRA",
+    title="🎨 mom - WORKING LoRA",
     description="""
     ✅ **DIAGNOSTIC PROVEN: All LoRAs work perfectly!**
     
     This interface uses the confirmed working LoRA:
     - ✅ LoRA: lora_output_style_aware (brightness: 89.9)
     - ✅ No black images
-    - ✅ Proper Rosanna Mitchell style
+    - ✅ Proper mom style
     - ✅ Clean, simple code
     
     All the complex fallbacks and error handling were causing the black image issues.
