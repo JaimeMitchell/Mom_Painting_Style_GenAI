@@ -1,7 +1,7 @@
-# KOHYA-SS COMPLETE SOLUTION FOR mom LORA TRAINING
+# MOM'S PAINTING LORA TRAINING. KEEPING AI ART LOCAL
 
 ## 🎯 SOLUTION: 
-Style-Aware mom LoRA Training. This is a birthday present project for my ma. She wanted something that could quickly generate images in her style that she could use as references for drawing and painting. Her own AI mood-board.
+Style-Aware mom LoRA Training on my Local Machine. This is a birthday present project for my ma. She wanted something that could quickly generate images in her style that she could use as references for drawing and painting. Her own AI mood-board.
 
 ## ✅ WHAT WAS FIXED FROM PAST LEARNING:
 
