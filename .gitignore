@@ -58,3 +58,5 @@ paintings/
 tmp/
 temp/
 final_
+stable-diffusion-v1-5/
+.gradio/
