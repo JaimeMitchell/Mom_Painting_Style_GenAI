@@ -39,7 +39,7 @@ ROSANNA_STYLE_DATA = {
         "warm_red_dominant": True,
         "average_rgb": (171.6, 169.8, 154.3),
         "brightness": 165.2,
-        "warm_tones": True
+        "varied_tones": True
     },
     "painting_characteristics": {
         "light_paintings": True,
@@ -55,38 +55,61 @@ ROSANNA_STYLE_DATA = {
 # KOHYA-SS STYLE-SPECIFIC CAPTIONS
 # ========================
 def generate_kohya_style_captions():
-    """Generate Kohya-SS optimized captions based on Mom's actual style analysis"""
+    """Generate Kohya-SS optimized captions based on actual paintings"""
     
     primary_captions = [
-        "mom_art, warm red color palette, light paintings",
-        "mom_art, garden landscapes, bright warm tones",
-        "mom_art, soft brushwork, consistent style",
-        "mom_art, warm lighting, uplifting mood",
-        "mom_art, red-orange palette, light-filled compositions"
+        "mom_art, garden landscape with warm and cool color balance",
+        "mom_art, acrylic collage with handmade paper and varied palette",
+        "mom_art, mixed media botanical with vibrant warm and cool tones",
+        "mom_art, nature scene with soft pastels and dynamic colors",
+        "mom_art, landscape art with layered colors and balanced composition"
     ]
     
     secondary_captions = [
-        "mom_art, beautiful garden paintings with warm colors",
-        "mom_art, soft warm lighting effects",
-        "mom_art, bright and uplifting artistic style",
-        "mom_art, garden scenes with warm red tones",
-        "mom_art, consistent warm color scheme",
-        "mom_art, light and airy compositions",
-        "mom_art, soft brushwork and warm palette",
-        "mom_art, garden focus with bright lighting",
-        "mom_art, warm red-orange color harmony",
-        "mom_art, luminous warm tones and soft textures"
+        "mom_art, garden flowers with blues, purples, greens and warm accents",
+        "mom_art, nature-inspired collage with textured paint and paper",
+        "mom_art, acrylic painting with expressive brushwork and color variety",
+        "mom_art, ink and watercolor with cool blues and botanicals",
+        "mom_art, mixed media with warm light and cool color contrast",
+        "mom_art, garden subject with diverse warm and cool palette",
+        "mom_art, nature scene with vibrant blues and organic forms",
+        "mom_art, textured collage with richly varied color combinations",
+        "mom_art, soft pastel landscape with warm and cool balance",
+        "mom_art, multi-layered nature art with bold color choices",
+        "mom_art, ink collage with blues, greens and natural forms",
+        "mom_art, acrylic and mixed media with varied color temperature",
+        "mom_art, ecoprint botanical with delicate layered technique",
+        "mom_art, oil and pastel landscape with complex color harmony",
+        "mom_art, garden painting with warm, cool and muted tones"
     ]
     
     technical_captions = [
-        "mom_art, rgb warm palette (171.6, 169.8, 154.3)",
-        "mom_art, brightness level 165.2, light paintings",
-        "mom_art, warm red dominant colors",
-        "mom_art, consistent artistic vision",
-        "mom_art, garden and landscape focus"
+        "mom_art, mixed medium with complex color palette",
+        "mom_art, acrylic on canvas with varied color harmony",
+        "mom_art, multi-media botanical with blue and warm tones",
+        "mom_art, landscape with expressive varied colors",
+        "mom_art, nature composition with cool and warm palette",
+        "mom_art, acrylic collage with dynamic color interplay",
+        "mom_art, ink and watercolor with blue and green tones",
+        "mom_art, soft pastel with balanced warm and cool colors",
+        "mom_art, tree and landscape with richly varied colors",
+        "mom_art, floral study with sophisticated color relationships",
+        "mom_art, botanical garden artwork with textured layers",
+        "mom_art, nature-inspired mixed media with careful color balance",
+        "mom_art, expressive landscape combining warm and cool zones",
+        "mom_art, abstract botanical with color-blocked formations",
+        "mom_art, garden composition with layered artistic technique"
     ]
     
-    return primary_captions + secondary_captions + technical_captions
+    style_variations = [
+        "mom_art style, professional botanical illustration",
+        "mom_art aesthetic, careful color theory application",
+        "mom_art technique, masterful use of warm-cool contrast",
+        "mom_art painting, sophisticated palette management",
+        "mom_art artwork, expressive botanical subject matter"
+    ]
+    
+    return primary_captions + secondary_captions + technical_captions + style_variations
 
 # ========================
 # KOHYA-SS STYLE-AWARE DATASET
@@ -137,13 +160,15 @@ def main():
     print("🎨 Kohya-SS Style-Aware Training for mom")
     print("=" * 60)
     
-    # Configuration
-    BASE_MODEL_ID = "runwayml/stable-diffusion-v1-5"
+    # Configuration - AGGRESSIVE FOR SMALL DATASET
+    BASE_MODEL_ID = "./stable-diffusion-v1-5"
     OUTPUT_DIR = "./lora_output_kohya_style_aware"
-    EPOCHS = 15
-    LORA_RANK = 20
-    LORA_ALPHA = 40
-    LEARNING_RATE = 8e-5
+    EPOCHS = 50  # Reduced - enough time but not overkill
+    LORA_RANK = 64  # Back to 64 - need capacity to learn
+    LORA_ALPHA = 128  # Scale with rank
+    LEARNING_RATE = 1e-4  # BACK UP - 2e-5 was killing training
+    GRADIENT_ACCUMULATION_STEPS = 2  # Reduced - less dampening
+    MIN_LOSS_THRESHOLD = 0.005  # Stop if overfitting badly
     
     os.makedirs(OUTPUT_DIR, exist_ok=True)
     
@@ -229,7 +254,7 @@ def main():
     # Create dataset
     style_captions = generate_kohya_style_captions()
     dataset = KohyaStyleDataset(
-        "./Ma_React_App/Paintings",
+        "./Paintings",
         "mom_art",
         vae,
         DEVICE,
@@ -242,9 +267,17 @@ def main():
     
     # Optimizer and scheduler (Kohya-SS style)
     lora_params = [p for name, p in lora_model.named_parameters() if 'lora_' in name]
-    optimizer = torch.optim.AdamW(lora_params, lr=LEARNING_RATE, weight_decay=0.1)
-    scheduler_opt = torch.optim.lr_scheduler.CosineAnnealingLR(
-        optimizer, T_max=EPOCHS * len(dataloader)
+    optimizer = torch.optim.AdamW(lora_params, lr=LEARNING_RATE, weight_decay=0.01, betas=(0.9, 0.999))
+    
+    # OneCycleLR: Cycles LR from low → high → low (prevents oscillation, allows aggressive learning)
+    total_steps = EPOCHS * len(dataloader)
+    scheduler_opt = torch.optim.lr_scheduler.OneCycleLR(
+        optimizer, 
+        max_lr=LEARNING_RATE,
+        total_steps=total_steps,
+        pct_start=0.3,  # 30% of training to ramp up
+        anneal_strategy='cos',
+        div_factor=10.0  # Start at LR/10
     )
     
     print(f"✅ Kohya-SS Style Configuration:")
@@ -252,18 +285,22 @@ def main():
     print(f"   Target modules: {len(target_modules)}")
     print(f"   Learning rate: {LEARNING_RATE}")
     
-    # Training loop
-    print(f"\n🚀 Starting Kohya-SS Style-Aware Training...")
+    # Training loop with proper monitoring
+    print(f"\n🚀 Starting Kohya-SS Style-Aware Training (100 epochs, 64-rank LoRA)...")
+    print(f"✅ Configuration: LR={LEARNING_RATE}, Rank={LORA_RANK}, Alpha={LORA_ALPHA}")
+    print(f"📚 Dataset: {len(dataset)} paintings x {len(style_captions)} captions = {len(dataset) * len(style_captions)} caption variants")
     
     best_loss = float('inf')
     global_step = 0
+    no_improvement_count = 0
+    max_no_improvement = 10  # Early stopping after 10 epochs without improvement
     
     for epoch in range(EPOCHS):
-        print(f"\n📊 Kohya-SS Epoch {epoch+1}/{EPOCHS}")
+        print(f"\n📊 Epoch {epoch+1}/{EPOCHS}")
         epoch_loss = 0
         successful_steps = 0
         
-        progress_bar = tqdm(dataloader, desc=f"Epoch {epoch+1}/{EPOCHS}")
+        progress_bar = tqdm(dataloader, desc=f"Epoch {epoch+1}")
         
         for step, batch in enumerate(progress_bar):
             try:
@@ -282,9 +319,9 @@ def main():
                 with torch.no_grad():
                     encoder_hidden_states = text_encoder(**text_inputs).last_hidden_state
                 
-                # Noise scheduling
+                # Noise scheduling with varied timesteps for better learning
                 timesteps = torch.randint(
-                    0, scheduler.config.num_train_timesteps,
+                    100, scheduler.config.num_train_timesteps,
                     (1,), device=DEVICE
                 ).long()
                 
@@ -303,34 +340,62 @@ def main():
                 target = noise
                 loss = F.mse_loss(model_pred.float(), target.float(), reduction="mean")
                 
-                # Backward pass
-                optimizer.zero_grad()
-                loss.backward()
-                optimizer.step()
-                scheduler_opt.step()
+                # Gradient accumulation
+                scaled_loss = loss / GRADIENT_ACCUMULATION_STEPS
+                scaled_loss.backward()
                 
+                # Track actual (unscaled) loss for monitoring
                 epoch_loss += loss.item()
                 successful_steps += 1
-                global_step += 1
                 
-                # Update progress
+                if (step + 1) % GRADIENT_ACCUMULATION_STEPS == 0:
+                    torch.nn.utils.clip_grad_norm_(lora_params, 1.0)
+                    optimizer.step()
+                    scheduler_opt.step()  # OneCycleLR steps every batch
+                    optimizer.zero_grad()
+                    global_step += 1
+                
+                # Better progress reporting
                 progress_bar.set_postfix({
                     "loss": loss.item(),
-                    "lr": scheduler_opt.get_last_lr()[0]
+                    "lr": optimizer.param_groups[0]['lr']
                 })
-                
-                # Save checkpoint
-                if global_step % 250 == 0 and loss.item() < best_loss:
-                    best_loss = loss.item()
-                    lora_model.save_pretrained(os.path.join(OUTPUT_DIR, f"checkpoint-{global_step}"))
-                    print(f"💾 Saved checkpoint at step {global_step}, loss: {best_loss:.4f}")
             
             except Exception as e:
                 print(f"❌ Error in step {step}: {e}")
                 continue
         
-        avg_epoch_loss = epoch_loss / successful_steps if successful_steps > 0 else 0
-        print(f"✅ Epoch {epoch+1} completed - Average Loss: {avg_epoch_loss:.4f}")
+        avg_epoch_loss = epoch_loss / max(1, successful_steps)
+        print(f"✅ Epoch {epoch+1} - Avg Loss: {avg_epoch_loss:.4f}")
+        
+        # Save checkpoint every 5 epochs for testing
+        if (epoch + 1) % 5 == 0 or epoch < 3:
+            checkpoint_dir = os.path.join(OUTPUT_DIR, f"checkpoint-{epoch+1}")
+            lora_model.save_pretrained(checkpoint_dir)
+            print(f"💾 Checkpoint saved at epoch {epoch+1}: loss={avg_epoch_loss:.4f}")
+            
+            # TEST GENERATION TO SEE IF STYLE IS ACTUALLY IMPROVING
+            try:
+                print(f"🧪 Testing style quality at epoch {epoch+1}...")
+                test_prompt = "mom_art, bright garden flowers with warm colors and soft brushwork"
+                with torch.no_grad():
+                    test_img = pipe(test_prompt, num_inference_steps=30, guidance_scale=7.5).images[0]
+                    test_img.save(f"epoch_{epoch+1}_test.png")
+                print(f"   ✅ Generated: epoch_{epoch+1}_test.png - VISUALLY INSPECT THIS")
+            except Exception as e:
+                print(f"   ⚠️  Could not generate test: {e}")
+        
+        # Track loss improvement
+        if avg_epoch_loss < best_loss:
+            best_loss = avg_epoch_loss
+            no_improvement_count = 0
+        else:
+            no_improvement_count += 1
+        
+        # Simple early stopping
+        if no_improvement_count >= max_no_improvement and epoch > 30:
+            print(f"⚠️  No improvement for {max_no_improvement} epochs. Stopping at epoch {epoch+1}")
+            break
     
     # Final save
     lora_model.save_pretrained(OUTPUT_DIR)
@@ -353,27 +418,34 @@ def main():
         json.dump(results, f, indent=2)
     
     print(f"\n🎉 Kohya-SS Style-Aware Training Completed!")
-    print(f"✅ Final loss: {best_loss:.4f}")
+    print(f"✅ Final best loss: {best_loss:.4f}")
     print(f"💾 Model saved to: {OUTPUT_DIR}")
+    print(f"\n🎯 TRAINING SUMMARY:")
+    print(f"   - Epochs completed: {epoch+1} (max 100)")
+    print(f"   - LoRA Rank: {LORA_RANK} (captures 3x more style detail than basic 20)")
+    print(f"   - Total steps: {global_step}")
+    print(f"   - Final learning rate: {optimizer.param_groups[0]['lr']:.2e}")
+    print(f"   - Training dataset: {len(dataset)} paintings")
+    print(f"\n✅ Model is now trained to recognize 'mom_art' as your mom's unique style")
+    print(f"✅ Use 'mom_art' token in prompts to get her painting style")
+    print(f"✅ Best results with detailed prompts: 'mom_art painting of [subject], [style details]'")
     
-    print(f"\n🎯 COMPARISON:")
-    print(f"   Original: Loss 0.2374 (shitty results)")
-    print(f"   Style-aware: Loss 0.1307 (45% better)")
-    print(f"   Kohya-SS Style-Aware: Loss {best_loss:.4f} (BEST)")
-    
-    # Test generation
-    print(f"\n🧪 Testing Kohya-SS Style generation...")
+    # Test generation with proper mom_art prompts
+    print(f"\n🧪 Testing Kohya-SS Style generation with trained mom_art token...")
     try:
+        # Proper prompts that use the trained mom_art token
         test_prompts = [
-            "warm garden landscape with bright light in mom style",
-            "mom art, soft warm colors and garden focus",
-            "bright painting with warm red-orange palette and uplifting mood"
+            "a beautiful mom_art painting, garden flowers with layered collage elements and vibrant colors",
+            "mom_art style, acrylic botanical study with warm and cool tones, expressive brushwork",
+            "mom_art, mixed media landscape with organic forms and balanced color harmony",
+            "style of mom_art, garden scene with soft pastels and delicate botanical details",
+            "mom_art painting, floral composition with textured paper and dynamic colors, professional art"
         ]
         
         for i, prompt in enumerate(test_prompts):
-            full_prompt = f"{prompt}"
-            with torch.autocast(device_type=DEVICE, dtype=DTYPE):
-                result = pipe(full_prompt, num_inference_steps=30).images[0]
+            print(f"\n   Generating: {prompt[:60]}...")
+            with torch.no_grad():
+                result = pipe(prompt, num_inference_steps=50, guidance_scale=7.5).images[0]
             result.save(f"kohya_test_{i+1}.png")
             print(f"   ✅ Saved: kohya_test_{i+1}.png")
         

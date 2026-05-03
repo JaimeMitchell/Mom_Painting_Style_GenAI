@@ -11,7 +11,7 @@ import matplotlib.pyplot as plt
 from pathlib import Path
 
 # Analyze the actual paintings
-paintings_dir = "./Ma_React_App/Paintings"
+paintings_dir = "./Paintings"
 analysis_results = {}
 
 print("🔍 ANALYZING mom'S ACTUAL STYLE...")
