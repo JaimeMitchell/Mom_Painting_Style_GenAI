@@ -52,103 +52,95 @@ ROSANNA_STYLE_DATA = {
 }
 
 # ========================
-# KOHYA-SS STYLE-SPECIFIC CAPTIONS
-# ========================
-def generate_kohya_style_captions():
-    """Generate Kohya-SS optimized captions based on actual paintings"""
-    
-    primary_captions = [
-        "mom_art, garden landscape with warm and cool color balance",
-        "mom_art, acrylic collage with handmade paper and varied palette",
-        "mom_art, mixed media botanical with vibrant warm and cool tones",
-        "mom_art, nature scene with soft pastels and dynamic colors",
-        "mom_art, landscape art with layered colors and balanced composition"
-    ]
-    
-    secondary_captions = [
-        "mom_art, garden flowers with blues, purples, greens and warm accents",
-        "mom_art, nature-inspired collage with textured paint and paper",
-        "mom_art, acrylic painting with expressive brushwork and color variety",
-        "mom_art, ink and watercolor with cool blues and botanicals",
-        "mom_art, mixed media with warm light and cool color contrast",
-        "mom_art, garden subject with diverse warm and cool palette",
-        "mom_art, nature scene with vibrant blues and organic forms",
-        "mom_art, textured collage with richly varied color combinations",
-        "mom_art, soft pastel landscape with warm and cool balance",
-        "mom_art, multi-layered nature art with bold color choices",
-        "mom_art, ink collage with blues, greens and natural forms",
-        "mom_art, acrylic and mixed media with varied color temperature",
-        "mom_art, ecoprint botanical with delicate layered technique",
-        "mom_art, oil and pastel landscape with complex color harmony",
-        "mom_art, garden painting with warm, cool and muted tones"
-    ]
-    
-    technical_captions = [
-        "mom_art, mixed medium with complex color palette",
-        "mom_art, acrylic on canvas with varied color harmony",
-        "mom_art, multi-media botanical with blue and warm tones",
-        "mom_art, landscape with expressive varied colors",
-        "mom_art, nature composition with cool and warm palette",
-        "mom_art, acrylic collage with dynamic color interplay",
-        "mom_art, ink and watercolor with blue and green tones",
-        "mom_art, soft pastel with balanced warm and cool colors",
-        "mom_art, tree and landscape with richly varied colors",
-        "mom_art, floral study with sophisticated color relationships",
-        "mom_art, botanical garden artwork with textured layers",
-        "mom_art, nature-inspired mixed media with careful color balance",
-        "mom_art, expressive landscape combining warm and cool zones",
-        "mom_art, abstract botanical with color-blocked formations",
-        "mom_art, garden composition with layered artistic technique"
-    ]
-    
-    style_variations = [
-        "mom_art style, professional botanical illustration",
-        "mom_art aesthetic, careful color theory application",
-        "mom_art technique, masterful use of warm-cool contrast",
-        "mom_art painting, sophisticated palette management",
-        "mom_art artwork, expressive botanical subject matter"
-    ]
-    
-    return primary_captions + secondary_captions + technical_captions + style_variations
 
 # ========================
-# KOHYA-SS STYLE-AWARE DATASET
+# PROFESSIONAL PER-IMAGE CAPTIONS (EDIT THESE FOR BEST RESULTS)
 # ========================
-class KohyaStyleDataset(Dataset):
-    def __init__(self, image_dir, concept_name, vae, device, style_captions):
+# Fill in each caption to match the actual style, subject, and color of the painting.
+IMAGE_CAPTIONS = {
+    "Brendas_Garden.jpg": "mom_art, Acrylic on Canvas,lush garden with layered cool and warm tones, vibrant multicolors, expressive brushwork, sunlit flowers with dark backgrounds",
+    "Vitos_Garden.jpg": "mom_art, Acrylic on Canvas, lush garden with layered cool and warm tones, vibrant multicolors, sunlit flowers , dynamic brushwork, uplifting mood",
+    "Hopes_Garden.jpg": "mom_art, Acrylic Collage with Handmade Paper on Board, vibrant garden scene with warm red, orange, pink and cool greens, purples, layered collage elements, dripping paint, flowers contrast against white background",
+    "In_The_Light.jpg": "mom_art, Acrylic Collage with Handmade Paper on Board, abstract landscape with cool greys, blues and greens, small spash of warm orange-red",
+    "Leslies_Garden.jpg": "mom_art, Acrylic on Canvas, lush garden with layered cool and warm toned abstract landscape, vibrant multicolors, sunlit flowers , bright background, dynamic brushwork",
+    "Stony_Creek_Trail_1.jpg": "mom_art, Acrylic Collage with Handmade Paper on Board, abstract creek landscape, soft teal-blue water, warm brown, gray green stones and creekbed, misty, forest green foliage in hazy background",
+    "Stony_Creek_Trail_2.jpg": "mom_art, Acrylic Collage with Handmade Paper on Board, abstract creek landscape, warm brown landscape with hints of yellow-green moss and soft teal-blue and purple-blue water, gray green moss stones and creekbed, hazy background",
+    "Stony_Creek_Trail_3.jpg": "mom_art, Acrylic Collage with Handmade Paper on Board, abstract creek landscape, soft teal, blue and gray water and sky, warm brown, gray green stones and creekbed, misty, dark forest-green hazy background",
+    "Sunflower.jpg": "mom_art, Ecoprint on Watercolor Paper, close-up sunflowers, bold yellow petals,blue middle textured, contrast againt white background",
+    "Tide_Pool_1.jpg": "mom_art, tide pool, organic forms, cool blues and greens, delicate brushwork",
+    "SunflowerandCorepsis.jpg": "mom_art, Ecoprint on Watercolor Paper, close-up sunflowers and coreopsis, bold yellow and red petals, with cool blues and greens, contrast against white background",
+    "The_Three_Sisters.jpg": "mom_art, Acrylic Collage with Handmade Paper on Board, abstract of corn, pumpkin and sunflower, vibrant multicolor, multi layered collage elements, contrast against white background",
+    "Thinking_of_Charlie.jpg": "mom_art, Acrylic Collage with Handmade Paper on Boards, abstract mountain winter landscape with layered cool and warm tones, vibrant multicolors, sunlit flowers, dynamic brushwork, fine and corse tree forms, various moody textures",
+    "Tide_Pool_1.jpg": "mom_art, Acrylic Collage with Handmade Paper on Board, organic forms of tide pool, cool blues and greens, delicate brushwork",
+    "balance-2.jpg": "mom_art, Acrylic Collage with Handmade Paper on Board, abstract underwater landscape with layered cool tones blues, greens,against white background, organic forms",
+    "flatcreek.jpg": "mom_art,  Ink on Watercolor Paper, abstract creek landscape with layered in vibrant cool and warm tones, organic forms",
+    "joes_garden.jpg": "mom_art, Ink Collage on Yupo Paper, layered cool tones of blue, green, purple with subtle highlights of pink and orange, emotional brushwork, bright background",
+    "poppies_on_trail.jpg": "mom_art, Acrylic & Ink Collage on Wood Cradle, vibrant red-orange poppies with layered cool greens and blues, dynamic brushwork, contrast against blue sky and purple mountains in far distant background",
+    "willowcreek.jpg": "mom_art,Soft Pastel on Paper, abstract creek landscape with layered cool blues and greens, warm brown, gray green stones and creekbed, misty, forest green and purple mountain hazy background",
+    "treeo-1.jpg": "mom_art,  Mixed Media Collage on Paper, abstract tree landscape with layered cool blues and greens, multitoned and colored trees, gray green mossy stone and earth, misty forest green hazy background",
+    "treeo-2.jpg": "mom_art,  Mixed Media Collage on Paper, abstract tree landscape with layered cool blues and greens, multitoned and colored trees, gray green mossy stone and earth, misty forest green hazy background",
+    "sleeping_indian.jpg": "mom_art, Oil and Pastel on Canvas, triptych of sleeping indian mountain landscape, layered cool and warm colors and tones. vibrant multicolors, sunlit, abstract, loose and soft brushwork",
+    "westwoods.jpg": "mom_art, Soft Pastel on Paper, moody landscape with warm foreground of trees in sunlight, layered with  cool blues and purple darkbackground of forest, strong contrast between light and dark, expressive strong strokes.",
+    "wilson_dike.jpg": "mom_art, Acrylic Collage with Handmade Paper on Board, abstract water landscape with layered cool and warm tones, vibrant multicolors, abstract reflections in water, expressive strokes, contrasting tones and colors",
+    "dream-field.jpg": "mom_art, watercolor on paper, abstract floral, vibrant multicolors, sunlit, dynamic brushwork, contrast against white background",
+    "acrylicpour-1.jpg": "mom_art, Acrylic Pour on Canvas, abstract, bold vibrant multicolors, dynamic organic forms",
+    "acrylicpour-2.jpg": "mom_art, Acrylic Pour on Canvas, abstract, bold vibrant multicolors, dynamic organic forms",
+    "acrylicpour-3.jpg": "mom_art, Acrylic Pour on Canvas, abstract, bold vibrant multicolors, dynamic organic forms",
+    "ecoprint-1.jpg": "mom_art, Ecoprint on Watercolor Paper, abstract floral, vibrant multicolors, sunlit, dynamic brushwork, contrast against white background",
+    "ecoprint-2.jpg": "mom_art, Ecoprint on Watercolor Paper, abstract floral, vibrant multicolors, sunlit, dynamic brushwork, contrast against white background",
+    "ecoprint-3.jpg": "mom_art, Ecoprint on Watercolor Paper, abstract floral, vibrant multicolors, sunlit, dynamic brushwork, contrast against white background",
+    "ecoprint-4.jpg": "mom_art, Ecoprint on Watercolor Paper, abstract floral, vibrant multicolors, sunlit, dynamic brushwork, contrast against white background",
+    "inklandscape-1.jpg": "mom_art, Ink on Yupo Paper, abstract landscape with layered bright multicolors, dynamic brushwork, contrast against white background",
+    "inklandscape-2.jpg": "mom_art, Ink on Yupo Paper, abstract landscape with layered bright multicolors, dynamic brushwork, contrast against white background",
+    "inklandscape-3.jpg": "mom_art, Ink on Yupo Paper, abstract landscape with layered bright multicolors, dynamic brushwork, contrast against white background",
+    "inklandscape-4.jpg": "mom_art, Ink on Yupo Paper, abstract landscape with layered bright multicolors, dynamic brushwork, contrast against white background"
+    # ... Add all other images here ...
+}
+
+# If you want to use generic captions for images not in the dict, set a fallback:
+FALLBACK_CAPTION = "mom_art, garden landscape, expressive color, botanical subject, soft brushwork"
+
+# ========================
+# KOHYA-SS STYLE-AWARE DATASET (WITH AUGMENTATION)
+# ========================
+# ========================
+
+    def __init__(self, image_dir, concept_name, vae, device):
         self.files = [os.path.join(image_dir, f) for f in os.listdir(image_dir)
                       if f.lower().endswith((".png", ".jpg", ".jpeg"))]
+        # Professional data augmentation
         self.transform = transforms.Compose([
-            transforms.Resize((512, 512)),
+            transforms.Resize(544),  # Slightly larger for random crop
+            transforms.RandomCrop(512),
+            transforms.RandomHorizontalFlip(),
+            transforms.ColorJitter(brightness=0.15, contrast=0.15, saturation=0.15, hue=0.05),
             transforms.ToTensor(),
             transforms.Normalize([0.5], [0.5])
         ])
         self.concept_name = concept_name
         self.vae = vae
         self.device = device
-        self.style_captions = style_captions
-        
         print(f"🎨 Kohya-SS Style Dataset Setup:")
+        print(f"   Images: {len(self.files)}")
+        print(f"   Target: {ROSANNA_STYLE_DATA['painting_characteristics']}")
         print(f"   Images: {len(self.files)}")
         print(f"   Style captions: {len(self.style_captions)}")
         print(f"   Target: {ROSANNA_STYLE_DATA['painting_characteristics']}")
 
     def __len__(self):
-        return len(self.files)
-
-    def __getitem__(self, idx):
-        caption = self.style_captions[idx % len(self.style_captions)]
-        
+        file_name = os.path.basename(self.files[idx])
+        caption = IMAGE_CAPTIONS.get(file_name, FALLBACK_CAPTION)
         image = Image.open(self.files[idx]).convert("RGB")
         image_tensor = self.transform(image)
-        
         with torch.no_grad():
             latents = self.vae.encode(image_tensor.unsqueeze(0).cpu()).latent_dist.sample()
             latents = latents * self.vae.config.scaling_factor
             latents = latents.squeeze(0).to(self.device)
-            
         return {
-            "pixel_values": latents, 
+            "pixel_values": latents,
+            "caption": caption,
+            "file_name": file_name
+        }
             "caption": caption,
             "file_name": os.path.basename(self.files[idx])
         }
@@ -160,15 +152,15 @@ def main():
     print("🎨 Kohya-SS Style-Aware Training for mom")
     print("=" * 60)
     
-    # Configuration - AGGRESSIVE FOR SMALL DATASET
+    # Professional configuration for small dataset
     BASE_MODEL_ID = "./stable-diffusion-v1-5"
     OUTPUT_DIR = "./lora_output_kohya_style_aware"
-    EPOCHS = 50  # Reduced - enough time but not overkill
-    LORA_RANK = 64  # Back to 64 - need capacity to learn
-    LORA_ALPHA = 128  # Scale with rank
-    LEARNING_RATE = 1e-4  # BACK UP - 2e-5 was killing training
-    GRADIENT_ACCUMULATION_STEPS = 2  # Reduced - less dampening
-    MIN_LOSS_THRESHOLD = 0.005  # Stop if overfitting badly
+    EPOCHS = 100  # More epochs for small data
+    LORA_RANK = 128  # Higher rank for more style detail
+    LORA_ALPHA = 128
+    LEARNING_RATE = 5e-5  # Lower for stability
+    GRADIENT_ACCUMULATION_STEPS = 2
+    MIN_LOSS_THRESHOLD = 0.003
     
     os.makedirs(OUTPUT_DIR, exist_ok=True)
     
@@ -251,19 +243,15 @@ def main():
     lora_model = get_peft_model(unet, lora_config)
     lora_model.train()
     
-    # Create dataset
-    style_captions = generate_kohya_style_captions()
+    # Create dataset (uses per-image captions and augmentation)
     dataset = KohyaStyleDataset(
         "./Paintings",
         "mom_art",
         vae,
-        DEVICE,
-        style_captions
+        DEVICE
     )
-    
     dataloader = DataLoader(dataset, batch_size=1, shuffle=True, num_workers=0)
-    
-    print(f"📚 Dataset prepared: {len(dataset)} images, {len(style_captions)} style captions")
+    print(f"📚 Dataset prepared: {len(dataset)} images with per-image captions")
     
     # Optimizer and scheduler (Kohya-SS style)
     lora_params = [p for name, p in lora_model.named_parameters() if 'lora_' in name]

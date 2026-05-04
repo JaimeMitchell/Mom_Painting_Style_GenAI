@@ -21,8 +21,8 @@ pipe = StableDiffusionPipeline.from_pretrained(
     local_files_only=True
 )
 
-# Load Kaggle LoRA adapter - use root folder as adapter directory
-adapter_dir = "."  # Root folder contains adapter_config.json and adapter_model.safetensors
+# Load LoRA adapter from lora_output_style_aware directory
+adapter_dir = "lora_output_style_aware"  # Where the safetensors files are stored
 
 try:
     # Load LoRA adapter from root directory

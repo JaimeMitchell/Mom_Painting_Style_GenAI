@@ -22,14 +22,21 @@ pipe = StableDiffusionPipeline.from_pretrained(
 )
 
 lora_loaded = False
+loaded_from = None
 for lora_path in LORA_PATHS:
     if os.path.exists(os.path.join(lora_path, "adapter_config.json")):
         try:
             pipe.unet = PeftModel.from_pretrained(pipe.unet, lora_path)
             lora_loaded = True
+            loaded_from = lora_path
+            print(f"✅ Loaded LoRA from: {lora_path}")
             break
-        except:
+        except Exception as e:
+            print(f"❌ Failed to load {lora_path}: {e}")
             continue
+
+if not lora_loaded:
+    print("⚠️  No LoRA model found - using base Stable Diffusion")
 
 if torch.backends.mps.is_available():
     pipe.enable_attention_slicing()
