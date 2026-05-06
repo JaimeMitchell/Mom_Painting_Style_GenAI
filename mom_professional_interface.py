@@ -26,6 +26,8 @@ pipe = StableDiffusionPipeline.from_pretrained(
     local_files_only=True
 ).to(device)
 
+
+
 def get_available_checkpoints():
     if not os.path.exists(LORA_BASE_DIR): 
         return []
@@ -67,28 +69,29 @@ def load_selected_checkpoint(checkpoint_name):
         return False
 
 def normalize_prompt(prompt):
-    """Auto-correct keywords to match exact training captions and add mom_art token"""
+    """Auto-correct keywords to match exact training captions and add mom_art trigger token"""
     keyword_map = {
-        # Mediums (all case variations)
+        # Exact trained mediums
         "acrylic on canvas": "Acrylic on Canvas",
-        "acrylic collage with handmade paper": "Acrylic Collage with Handmade Paper",
+        "acrylic collage with handmade paper on board": "Acrylic Collage with Handmade Paper on Board",
+        "acrylic collage with handmade paper on boards": "Acrylic Collage with Handmade Paper on Boards",
         "ecoprint on watercolor paper": "Ecoprint on Watercolor Paper",
-        "ink on yupo paper": "Ink on Yupo Paper",
-        "acrylic pour on canvas": "Acrylic Pour on Canvas",
-        "soft pastel on paper": "Soft Pastel on Paper",
-        "oil and pastel on canvas": "Oil and Pastel on Canvas",
-        "mixed media collage on paper": "Mixed Media Collage on Paper",
-        "acrylic & ink collage": "Acrylic & Ink Collage",
         "ink on watercolor paper": "Ink on Watercolor Paper",
-        "ink collage on yupo paper": "Ink Collage on Yupo Paper",
+        "soft pastel on paper": "Soft Pastel on Paper",
+        "mixed media collage on paper": "Mixed Media Collage on Paper",
+        "acrylic & ink collage on wood cradle": "Acrylic & Ink Collage on Wood Cradle",
+        "oil and pastel on canvas": "Oil and Pastel on Canvas",
         "watercolor on paper": "watercolor on paper",
+        "acrylic pour on canvas": "Acrylic Pour on Canvas",
+        "ink on yupo paper": "Ink on Yupo Paper",
+        "ink collage on yupo paper": "Ink Collage on Yupo Paper",
     }
     
     normalized = prompt.lower()
     for key, value in keyword_map.items():
         normalized = normalized.replace(key, value)
     
-    # Auto-prepend "mom_art," if not already present
+    # Always prepend "mom_art," trigger token - required for LoRA style activation
     if not normalized.startswith("mom_art"):
         normalized = f"mom_art, {normalized}"
     
@@ -117,7 +120,7 @@ def generate_image(prompt, checkpoint_name, steps=30, guidance=7.5, seed=None, s
 
 # --- GRADIO INTERFACE ---
 with gr.Blocks() as demo: # Moved theme to launch() per Gradio 6.0 warning
-    gr.Markdown("# 🎨 mom_art Style Explorer")
+    gr.Markdown("# 🎨 Rosanna Mitchell AI Art Generator")
     
     with gr.Row():
         with gr.Column(scale=2):
@@ -136,16 +139,42 @@ with gr.Blocks() as demo: # Moved theme to launch() per Gradio 6.0 warning
             output_img = gr.Image(label="Result")
 
         with gr.Column(scale=1):
+            gr.Markdown("### 🎨 Available Mediums\nClick to add to prompt:")
+            
+            # Medium keywords as clickable buttons - EXACT trained mediums
+            medium_keywords = [
+                "Acrylic on Canvas",
+                "Acrylic Collage with Handmade Paper on Board",
+                "Acrylic Collage with Handmade Paper on Boards",
+                "Ecoprint on Watercolor Paper",
+                "Ink on Watercolor Paper",
+                "Soft Pastel on Paper",
+                "Mixed Media Collage on Paper",
+                "Acrylic & Ink Collage on Wood Cradle",
+                "Oil and Pastel on Canvas",
+                "watercolor on paper",
+                "Acrylic Pour on Canvas",
+                "Ink on Yupo Paper",
+                "Ink Collage on Yupo Paper",
+            ]
+            
+            # Create buttons in rows (3 columns)
+            for i in range(0, len(medium_keywords), 3):
+                with gr.Row():
+                    for medium in medium_keywords[i:i+3]:
+                        btn = gr.Button(medium, size="sm")
+                        btn.click(
+                            fn=lambda current, m=medium: f"{current.split(',')[0]}, {m}, {', '.join(current.split(',')[1:])}" if ',' in current and current.split(',')[1].strip() else f"{current}, {m}" if current.strip() else m,
+                            inputs=[prompt],
+                            outputs=prompt
+                        )
+            
             gr.Markdown("""### 💡 How to Prompt
             **The Formula:**
             `[Subject], [Medium Keyword], [Color Details]`
             
-            **Medium Keywords to try:**
-            *   `Acrylic Pour on Canvas`
-            *   `Ecoprint on Watercolor Paper`
-            *   `Ink on Yupo Paper`
-            *   `Acrylic Collage with Handmade Paper`
-            *   `Soft Pastel on Paper`
+            **Example:**
+            "sunset landscape, Acrylic Pour on Canvas, warm oranges and reds"
             """)
             
             with gr.Accordion("Advanced Settings", open=False):
